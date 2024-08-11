@@ -110,7 +110,104 @@ document.addEventListener('DOMContentLoaded', function () {
         displayFilteredMeals(filteredMeals);
     }
 
-   
+    function displayFilteredMeals(filteredMeals) {
+        mealList.innerHTML = '';
+        filteredMeals.forEach((meal, index) => {
+            const mealItem = document.createElement('li');
+            mealItem.draggable = true;
+            mealItem.innerHTML = `
+                <span>${meal.name} (${meal.category}) - ${meal.time}</span>
+                <button onclick="editMeal(${index})">Edit</button>
+                <button onclick="deleteMeal(${index})">Delete</button>
+            `;
+            mealItem.addEventListener('dragstart', handleDragStart);
+            mealItem.addEventListener('dragend', handleDragEnd);
+            mealList.appendChild(mealItem);
+        });
+    }
+
+    function sortMeals() {
+        meals.sort((a, b) => a.name.localeCompare(b.name));
+        displayMeals();
+    }
+
+    function updateMealStatistics() {
+        let totalCalories = 0;
+        let totalProtein = 0;
+        let totalCarbs = 0;
+        let totalFats = 0;
+
+        meals.forEach(meal => {
+            totalCalories += meal.calories;
+            totalProtein += meal.protein;
+            totalCarbs += meal.carbs;
+            totalFats += meal.fats;
+        });
+
+        document.getElementById('total-calories').textContent = totalCalories;
+        document.getElementById('total-protein').textContent = totalProtein;
+        document.getElementById('total-carbs').textContent = totalCarbs;
+        document.getElementById('total-fats').textContent = totalFats;
+    }
+
+    function handleDragStart(event) {
+        event.target.classList.add('dragging');
+    }
+
+    function handleDragOver(event) {
+        event.preventDefault();
+        const afterElement = getDragAfterElement(mealList, event.clientY);
+        const draggingElement = document.querySelector('.dragging');
+        if (afterElement == null) {
+            mealList.appendChild(draggingElement);
+        } else {
+            mealList.insertBefore(draggingElement, afterElement);
+        }
+    }
+
+    function handleDrop() {
+        const draggingElement = document.querySelector('.dragging');
+        draggingElement.classList.remove('dragging');
+        saveMeals(); // Save the updated order
+    }
+
+    function handleDragEnd() {
+        const draggingElement = document.querySelector('.dragging');
+        if (draggingElement) {
+            draggingElement.classList.remove('dragging');
+        }
+    }
+
+    function getDragAfterElement(container, y) {
+        const draggableElements = [...container.querySelectorAll('li:not(.dragging)')];
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        localStorage.setItem('darkMode', isDarkMode);
+        toggleDarkModeButton.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
+    }
+
+    function loadDarkModeSetting() {
+        const darkModeSetting = localStorage.getItem('darkMode');
+        if (darkModeSetting === 'true') {
+            document.body.classList.add('dark-mode');
+            toggleDarkModeButton.textContent = 'Light Mode';
+        } else {
+            toggleDarkModeButton.textContent = 'Dark Mode';
+        }
+    }
+
     // Load meals and dark mode setting from local storage on page load
     loadMeals();
     loadDarkModeSetting();
