@@ -1,3 +1,4 @@
+<!-- Updated: index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +10,7 @@
 <body>
     <header>
         <h1>Meal Planner</h1>
+        <button id="toggle-dark-mode">Toggle Dark Mode</button>
         <nav>
             <a href="planner.html">Plan Your Meals</a>
             <a href="shopping-list.html">Shopping List</a>
@@ -20,12 +22,10 @@
             <p>Organize your meals and create a shopping list with ease.</p>
         </section>
 
-        <!-- New: Search bar -->
         <section class="search-bar">
             <input type="text" id="search-meal" placeholder="Search meals...">
         </section>
 
-        <!-- Updated: Meal Form with Categories -->
         <section class="meal-form-section">
             <form id="meal-form">
                 <label for="meal-name">Meal Name:</label>
@@ -42,6 +42,19 @@
                     <option value="Snack">Snack</option>
                 </select>
 
+                <!-- New: Nutritional Information Fields -->
+                <label for="calories">Calories:</label>
+                <input type="number" id="calories" required>
+
+                <label for="protein">Protein (g):</label>
+                <input type="number" id="protein" required>
+
+                <label for="carbs">Carbs (g):</label>
+                <input type="number" id="carbs" required>
+
+                <label for="fats">Fats (g):</label>
+                <input type="number" id="fats" required>
+
                 <label for="ingredients">Ingredients (comma separated):</label>
                 <input type="text" id="ingredients" required>
 
@@ -49,7 +62,15 @@
             </form>
         </section>
 
-        <!-- New: Meal List and Clear All Button -->
+        <!-- New: Meal Statistics Section -->
+        <section class="meal-statistics">
+            <h3>Meal Statistics</h3>
+            <p>Total Calories: <span id="total-calories">0</span></p>
+            <p>Total Protein: <span id="total-protein">0</span>g</p>
+            <p>Total Carbs: <span id="total-carbs">0</span>g</p>
+            <p>Total Fats: <span id="total-fats">0</span>g</p>
+        </section>
+
         <section class="meal-list-section">
             <ul id="meal-list"></ul>
             <button id="clear-all-meals">Clear All Meals</button>
