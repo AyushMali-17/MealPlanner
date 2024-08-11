@@ -5,8 +5,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const filterCategory = document.getElementById('filter-category');
     const sortMealsButton = document.getElementById('sort-meals');
     const toggleDarkModeButton = document.getElementById('toggle-dark-mode');
-
+    const searchBtn = document.getElementById('search-btn');
+    const calorieGoalElement = document.createElement('div');
+    
     let meals = [];
+    let calorieGoal = localStorage.getItem('calorieGoal') || 2000;
 
     mealForm.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -15,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
         saveMeals();
         clearForm();
         updateMealStatistics();
+        animateFormSubmission();
     });
 
     mealList.addEventListener('dragover', handleDragOver);
@@ -23,8 +27,17 @@ document.addEventListener('DOMContentLoaded', function () {
     searchMealInput.addEventListener('input', filterAndDisplayMeals);
     filterCategory.addEventListener('change', filterAndDisplayMeals);
     sortMealsButton.addEventListener('click', sortMeals);
-
     toggleDarkModeButton.addEventListener('click', toggleDarkMode);
+    searchBtn.addEventListener('click', function() {
+        const searchTerm = searchMealInput.value;
+        gsap.to('.search-container', {
+            scale: 1.05,
+            duration: 0.2,
+            yoyo: true,
+            repeat: 1,
+            onComplete: () => filterAndDisplayMeals()
+        });
+    });
 
     function getFormData() {
         return {
@@ -41,22 +54,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function addMeal(mealData) {
         meals.push(mealData);
-        displayMeals();
+        const mealElement = displayMeal(mealData, meals.length - 1);
+        animateMealAddition(mealElement);
+        saveMeals();
+        updateMealStatistics();
+    }
+
+    function displayMeal(meal, index) {
+        const mealItem = document.createElement('li');
+        mealItem.draggable = true;
+        mealItem.innerHTML = `
+            <span>${meal.name} (${meal.category}) - ${meal.time}</span>
+            <div>
+                <button onclick="editMeal(${index})" class="btn-icon"><i class="fas fa-edit"></i></button>
+                <button onclick="deleteMeal(${index})" class="btn-icon"><i class="fas fa-trash-alt"></i></button>
+            </div>
+        `;
+        mealItem.addEventListener('dragstart', handleDragStart);
+        mealItem.addEventListener('dragend', handleDragEnd);
+        mealList.appendChild(mealItem);
+        return mealItem;
     }
 
     function displayMeals() {
         mealList.innerHTML = '';
         meals.forEach((meal, index) => {
-            const mealItem = document.createElement('li');
-            mealItem.draggable = true;
-            mealItem.innerHTML = `
-                <span>${meal.name} (${meal.category}) - ${meal.time}</span>
-                <button onclick="editMeal(${index})">Edit</button>
-                <button onclick="deleteMeal(${index})">Delete</button>
-            `;
-            mealItem.addEventListener('dragstart', handleDragStart);
-            mealItem.addEventListener('dragend', handleDragEnd);
-            mealList.appendChild(mealItem);
+            displayMeal(meal, index);
         });
     }
 
@@ -113,22 +136,25 @@ document.addEventListener('DOMContentLoaded', function () {
     function displayFilteredMeals(filteredMeals) {
         mealList.innerHTML = '';
         filteredMeals.forEach((meal, index) => {
-            const mealItem = document.createElement('li');
-            mealItem.draggable = true;
-            mealItem.innerHTML = `
-                <span>${meal.name} (${meal.category}) - ${meal.time}</span>
-                <button onclick="editMeal(${index})">Edit</button>
-                <button onclick="deleteMeal(${index})">Delete</button>
-            `;
-            mealItem.addEventListener('dragstart', handleDragStart);
-            mealItem.addEventListener('dragend', handleDragEnd);
-            mealList.appendChild(mealItem);
+            displayMeal(meal, index);
         });
     }
 
     function sortMeals() {
         meals.sort((a, b) => a.name.localeCompare(b.name));
-        displayMeals();
+        gsap.to(sortMealsButton, {
+            rotation: 360,
+            duration: 0.5,
+            onComplete: () => {
+                displayMeals();
+                gsap.from('#meal-list li', {
+                    y: 10,
+                    opacity: 0,
+                    stagger: 0.05,
+                    duration: 0.3
+                });
+            }
+        });
     }
 
     function updateMealStatistics() {
@@ -148,6 +174,20 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('total-protein').textContent = totalProtein;
         document.getElementById('total-carbs').textContent = totalCarbs;
         document.getElementById('total-fats').textContent = totalFats;
+
+        // Update calorie goal progress
+        const calorieProgress = (totalCalories / calorieGoal) * 100;
+        const progressBar = document.getElementById('calorie-progress') || document.createElement('div');
+        if (!document.getElementById('calorie-progress')) {
+            progressBar.id = 'calorie-progress';
+            document.querySelector('.meal-statistics').appendChild(progressBar);
+        }
+        gsap.to(progressBar, {
+            width: `${Math.min(calorieProgress, 100)}%`,
+            duration: 0.5,
+            backgroundColor: calorieProgress > 100 ? '#f44336' : '#4CAF50'
+        });
+        progressBar.textContent = `${Math.round(calorieProgress)}% of ${calorieGoal} cal goal`;
     }
 
     function handleDragStart(event) {
@@ -195,20 +235,35 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.classList.toggle('dark-mode');
         const isDarkMode = document.body.classList.contains('dark-mode');
         localStorage.setItem('darkMode', isDarkMode);
-        toggleDarkModeButton.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
+        const icon = toggleDarkModeButton.querySelector('i');
+        icon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+        
+        // Animate the transition
+        gsap.to('body', {
+            backgroundColor: isDarkMode ? '#333' : '#f4f4f4',
+            color: isDarkMode ? '#f4f4f4' : '#333',
+            duration: 0.5
+        });
     }
 
-    function loadDarkModeSetting() {
-        const darkModeSetting = localStorage.getItem('darkMode');
-        if (darkModeSetting === 'true') {
-            document.body.classList.add('dark-mode');
-            toggleDarkModeButton.textContent = 'Light Mode';
-        } else {
-            toggleDarkModeButton.textContent = 'Dark Mode';
-        }
+    function animateMealAddition(mealElement) {
+        gsap.from(mealElement, {
+            opacity: 0,
+            y: -20,
+            duration: 0.5
+        });
     }
 
-    // Load meals and dark mode setting from local storage on page load
+    function animateFormSubmission() {
+        gsap.to(mealForm, {
+            scale: 1.05,
+            duration: 0.3,
+            yoyo: true,
+            repeat: 1
+        });
+    }
+
+    // Load initial data and settings
     loadMeals();
-    loadDarkModeSetting();
+    toggleDarkMode(); // Apply saved dark mode setting
 });
