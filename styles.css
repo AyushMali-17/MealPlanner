@@ -4,6 +4,7 @@ body {
     padding: 0;
     background-color: #f4f4f4;
     color: #333;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 header {
@@ -24,12 +25,18 @@ header #toggle-dark-mode {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 nav a {
     color: white;
     margin: 0 15px;
     text-decoration: none;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: #ddd;
 }
 
 main {
@@ -45,12 +52,27 @@ main {
     text-align: center;
 }
 
-.search-bar input {
+.search-bar input,
+.search-bar select {
     padding: 10px;
-    width: 60%;
-    max-width: 500px;
+    margin-right: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    transition: border-color 0.3s;
+}
+
+.search-bar button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-bar button:hover {
+    background-color: #45a049;
 }
 
 .meal-form-section {
@@ -69,6 +91,12 @@ main {
     margin-bottom: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    transition: border-color 0.3s;
+}
+
+.meal-form-section input:focus,
+.meal-form-section select:focus {
+    border-color: #4CAF50;
 }
 
 .meal-form-section button {
@@ -78,6 +106,11 @@ main {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.meal-form-section button:hover {
+    background-color: #45a049;
 }
 
 .meal-statistics {
@@ -86,6 +119,7 @@ main {
     background-color: #e7e7e7;
     padding: 15px;
     border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .meal-list-section {
@@ -107,6 +141,11 @@ main {
     justify-content: space-between;
     align-items: center;
     cursor: grab;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.meal-list-section li:hover {
+    background-color: #f9f9f9;
 }
 
 .meal-list-section li.dragging {
@@ -120,6 +159,11 @@ main {
     padding: 5px 10px;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.meal-list-section li button:hover {
+    background-color: #e53935;
 }
 
 #clear-all-meals {
@@ -131,6 +175,11 @@ main {
     cursor: pointer;
     display: block;
     margin: 20px auto;
+    transition: background-color 0.3s;
+}
+
+#clear-all-meals:hover {
+    background-color: #e53935;
 }
 
 /* Responsive Design */
@@ -160,11 +209,49 @@ header.dark-mode #toggle-dark-mode {
     color: #333;
 }
 
-.meal-list-section li.dark-mode {
-    background-color: #444;
-    border: 1px solid #555;
+header.dark-mode nav a {
+    color: #ccc;
+}
+
+header.dark-mode nav a:hover {
+    color: white;
+}
+
+.search-bar.dark-mode input,
+.search-bar.dark-mode select,
+.search-bar.dark-mode button {
+    background-color: #555;
+    color: white;
+    border-color: #666;
+}
+
+.search-bar.dark-mode button:hover {
+    background-color: #4CAF50;
 }
 
 .meal-statistics.dark-mode {
     background-color: #444;
+}
+
+.meal-list-section.dark-mode li {
+    background-color: #555;
+    border-color: #666;
+}
+
+.meal-list-section.dark-mode li:hover {
+    background-color: #666;
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+footer.dark-mode {
+    background-color: #222;
 }
