@@ -27,12 +27,82 @@ main {
     text-align: center;
 }
 
-footer {
-    background-color: #333;
-    color: white;
+.search-bar {
+    margin: 20px 0;
     text-align: center;
+}
+
+.search-bar input {
     padding: 10px;
-    position: fixed;
-    bottom: 0;
+    width: 60%;
+    max-width: 500px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.meal-form-section {
+    margin: 20px 0;
+}
+
+.meal-form-section label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.meal-form-section input,
+.meal-form-section select {
     width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.meal-form-section button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.meal-list-section {
+    margin: 20px 0;
+}
+
+.meal-list-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.meal-list-section li {
+    background-color: #fff;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.meal-list-section li button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#clear-all-meals {
+    padding: 10px 15px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 20px auto;
 }
