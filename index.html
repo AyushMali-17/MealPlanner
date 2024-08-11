@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,6 +18,41 @@
         <section class="intro">
             <h2>Welcome to Your Meal Planner</h2>
             <p>Organize your meals and create a shopping list with ease.</p>
+        </section>
+
+        <!-- New: Search bar -->
+        <section class="search-bar">
+            <input type="text" id="search-meal" placeholder="Search meals...">
+        </section>
+
+        <!-- Updated: Meal Form with Categories -->
+        <section class="meal-form-section">
+            <form id="meal-form">
+                <label for="meal-name">Meal Name:</label>
+                <input type="text" id="meal-name" required>
+
+                <label for="meal-time">Meal Time:</label>
+                <input type="time" id="meal-time" required>
+
+                <label for="meal-category">Category:</label>
+                <select id="meal-category">
+                    <option value="Breakfast">Breakfast</option>
+                    <option value="Lunch">Lunch</option>
+                    <option value="Dinner">Dinner</option>
+                    <option value="Snack">Snack</option>
+                </select>
+
+                <label for="ingredients">Ingredients (comma separated):</label>
+                <input type="text" id="ingredients" required>
+
+                <button type="submit">Add Meal</button>
+            </form>
+        </section>
+
+        <!-- New: Meal List and Clear All Button -->
+        <section class="meal-list-section">
+            <ul id="meal-list"></ul>
+            <button id="clear-all-meals">Clear All Meals</button>
         </section>
     </main>
     <footer>
